@@ -19,13 +19,14 @@
     return self;
 }
 
-
-
 -(int)getRandomNumberBetween:(int)from to:(int)to {
-    
     int random = (int)from + arc4random() % (to-from+1);
     self.currentValue = random;
     return random;
 }
+
+
+
+
 
 @end
