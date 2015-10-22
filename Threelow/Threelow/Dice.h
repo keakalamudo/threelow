@@ -12,6 +12,7 @@
 
 
 @property (nonatomic) int currentValue;
+@property (nonatomic) bool isHeld;
 
 
 //- (instancetype)initWithRandom:(NSString*)value;

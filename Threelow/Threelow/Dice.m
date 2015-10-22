@@ -14,7 +14,8 @@
 {
     self = [super init];
     if (self) {
-        self.currentValue = 0;
+        self.currentValue = [self getRandomNumberBetween:1 to:6];
+        self.isHeld = NO;
     }
     return self;
 }

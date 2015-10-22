@@ -9,44 +9,60 @@
 #import <Foundation/Foundation.h>
 #import "Dice.h"
 #import "InputCollector.h"
-
+#import "GameController.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
+        
+        GameController *currentGame = [[GameController alloc] init];
+        InputCollector *collectorPrompt = [[InputCollector alloc]init];
         
         Dice *dice1 = [[Dice alloc] init];
         Dice *dice2 = [[Dice alloc] init];
         Dice *dice3 = [[Dice alloc] init];
         Dice *dice4 = [[Dice alloc] init];
         Dice *dice5 = [[Dice alloc] init];
-        
-        InputCollector *collectorPrompt = [[InputCollector alloc]init];
      
         bool rollAgain = true;
         
+        [currentGame addArrayToStorage:@[dice1, dice2, dice3, dice4, dice5]];
+
+        
         while(rollAgain){
             
-            NSString *initialInput = [collectorPrompt inputForPrompt:(@"\nWhat would you like to do?\nRoll, Hold or Quit")];
+            NSString *initialInput = [collectorPrompt inputForPrompt:(@"\nWhat would you like to do?\nRoll, Reset or Quit")];
             
             if([initialInput isEqualToString:@"roll"]){
-                [dice1 getRandomNumberBetween:1 to:6];
-                [dice2 getRandomNumberBetween:1 to:6];
-                [dice3 getRandomNumberBetween:1 to:6];
-                [dice4 getRandomNumberBetween:1 to:6];
-                [dice5 getRandomNumberBetween:1 to:6];
-                NSLog(@"Dice 1 roled %d", dice1.currentValue);
-                NSLog(@"Dice 2 roled %d", dice2.currentValue);
-                NSLog(@"Dice 3 roled %d", dice3.currentValue);
-                NSLog(@"Dice 4 roled %d", dice4.currentValue);
-                NSLog(@"Dice 5 roled %d", dice5.currentValue);
-                //rollAgain = false;
+                [currentGame roll];
                 
-            }else if ([initialInput isEqualToString:@"hold"]){
+                NSString *request = [collectorPrompt inputForPrompt:(@"\nWould you like to Hold? y/n")];
                 
+                if([request isEqualToString:@"y"]){
+                    NSString *index = [collectorPrompt inputForPrompt:(@"\nPlease enter the index for the Dice you want to hold")];
+                    int arrayIndex = [ index intValue];
+//                    currentGame.diceBank[arrayIndex].isHeld= YES;
+                    Dice *dice = [currentGame.diceBank objectAtIndex:arrayIndex-1];
+                    dice.isHeld = YES;
+                    NSLog(@"[%d]", arrayIndex);
+                    NSString *nextRequest = [collectorPrompt inputForPrompt:(@"\nKeep held or unhold y/n")];
+                    if([nextRequest isEqualToString:@"y"]){
+                        //rollAgain = true;
+                        [currentGame roll];
+                
+                    }else{
+                        dice.isHeld = NO;
+                        
+                    }
+                    rollAgain = true;
+                }
+                
+                
+            }else if ([initialInput isEqualToString:@"reset"]){
+                [currentGame reset];
+                rollAgain = true;
             }else if ([initialInput isEqualToString:@"quit"]){
                 rollAgain = false;
-                
             }
 
             
@@ -59,3 +75,9 @@ int main(int argc, const char * argv[]) {
     }
     return 0;
 }
+
+
+
+
+//        NSArray *diceArray = @[dice1, dice2, dice3, dice4, dice5];
+//        NSMutableArray *heldDice =[[NSMutableArray alloc] init];
